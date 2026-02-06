@@ -1,0 +1,42 @@
+# Curva Glicêmica - Apache config para servidor de baixo desempenho
+
+# Index
+DirectoryIndex index.php
+
+# Cache de assets estáticos (CSS, JS) — reduz requisições ao servidor
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>
+
+# Compressão gzip — economiza banda
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE text/plain
+</IfModule>
+
+# Headers de cache
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>
+
+# Segurança básica
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Bloquear acesso a .htaccess
+    RewriteRule ^\.htaccess$ - [F,L]
+</IfModule>
+
+# Desabilitar listagem de diretórios
+Options -Indexes
+
+# Charset
+AddDefaultCharset UTF-8
